@@ -1,0 +1,64 @@
+<!--
+  ~ Part of Odoo App. See LICENSE file for full copyright and licensing details.
+  -->
+
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+        <!--
+            <record model="ir.ui.view" id="odoo_app.list">
+              <field name="name">odoo_app list</field>
+              <field name="model">odoo_app.models</field>
+              <field name="arch" type="xml">
+                <list>
+                  <field name="name"/>
+                  <field name="value"/>
+                  <field name="value2"/>
+                </list>
+              </field>
+            </record>
+        -->
+
+        <!-- actions opening views on models -->
+        <!--
+            <record model="ir.actions.act_window" id="odoo_app.action_window">
+              <field name="name">odoo_app window</field>
+              <field name="res_model">odoo_app.models</field>
+              <field name="view_mode">list,form</field>
+            </record>
+        -->
+
+        <!-- server action to the one above -->
+        <!--
+            <record model="ir.actions.server" id="odoo_app.action_server">
+              <field name="name">odoo_app server</field>
+              <field name="model_id" ref="model_odoo_app_models"/>
+              <field name="state">code</field>
+              <field name="code">
+                action = {
+                  "type": "ir.actions.act_window",
+                  "view_mode": "list,form",
+                  "res_model": model._name,
+                }
+              </field>
+            </record>
+        -->
+
+        <!-- Top menu item -->
+        <!--
+            <menuitem name="odoo_app" id="odoo_app.menu_root"/>
+        -->
+        <!-- menu categories -->
+        <!--
+            <menuitem name="Menu 1" id="odoo_app.menu_1" parent="odoo_app.menu_root"/>
+            <menuitem name="Menu 2" id="odoo_app.menu_2" parent="odoo_app.menu_root"/>
+        -->
+        <!-- actions -->
+        <!--
+            <menuitem name="List" id="odoo_app.menu_1_list" parent="odoo_app.menu_1"
+                      action="odoo_app.action_window"/>
+            <menuitem name="Server to list" id="odoo_app" parent="odoo_app.menu_2"
+                      action="odoo_app.action_server"/>
+        -->
+    </data>
+</odoo>
