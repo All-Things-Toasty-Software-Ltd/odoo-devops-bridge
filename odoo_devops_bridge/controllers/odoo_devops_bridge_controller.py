@@ -2,12 +2,12 @@
 
 import json
 import logging
-
 from odoo import http, _
 from odoo.http import request, Response
-from ..services.odoo_devops_bridge_sync_manager import OdooDevopsBridgeSyncManager
+
 from ..services.odoo_devops_bridge_github_client import OdooDevopsBridgeGithubClient
 from ..services.odoo_devops_bridge_gitlab_client import OdooDevopsBridgeGitlabClient
+from ..services.odoo_devops_bridge_sync_manager import OdooDevopsBridgeSyncManager
 from ..services.odoo_devops_bridge_youtrack_client import OdooDevopsBridgeYoutrackClient
 
 _logger = logging.getLogger(__name__)

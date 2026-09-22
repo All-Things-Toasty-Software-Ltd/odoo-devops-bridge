@@ -1,7 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Part of Odoo App. See LICENSE file for full copyright and licensing details.
+  ~ Part of Odoo Devops Bridge. See LICENSE file for full copyright and licensing details.
   -->
 
 <odoo>
+    <!-- DevOps Bridge Security Category -->
+    <record id="module_category_odoo_devops_bridge" model="ir.module.category">
+        <field name="name">DevOps Bridge</field>
+        <field name="description">Manage external integrations with GitHub, GitLab, and YouTrack.
+        </field>
+        <field name="sequence">25</field>
+    </record>
 
+    <!-- DevOps Bridge Privilege -->
+    <record id="res_groups_privilege_odoo_devops_bridge" model="res.groups.privilege">
+        <field name="name">DevOps Bridge</field>
+        <field name="sequence">25</field>
+        <field name="category_id" ref="module_category_odoo_devops_bridge"/>
+    </record>
+
+    <!-- User Group -->
+    <record id="group_odoo_devops_bridge_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_odoo_devops_bridge"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Manager Group -->
+    <record id="group_odoo_devops_bridge_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="sequence">20</field>
+        <field name="privilege_id" ref="res_groups_privilege_odoo_devops_bridge"/>
+        <field name="implied_ids" eval="[(4, ref('group_odoo_devops_bridge_user'))]"/>
+    </record>
+
+    <!-- Administrator Group -->
+    <record id="group_odoo_devops_bridge_admin" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="sequence">30</field>
+        <field name="privilege_id" ref="res_groups_privilege_odoo_devops_bridge"/>
+        <field name="implied_ids" eval="[(4, ref('group_odoo_devops_bridge_manager'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- Record Rules -->
+    <data noupdate="1">
+        <!-- Personal Account Security: Users only see their own personal credentials -->
+        <record id="odoo_devops_bridge_account_personal_rule" model="ir.rule">
+            <field name="name">Personal Account: User access own</field>
+            <field name="model_id" ref="model_odoo_devops_bridge_account"/>
+            <field name="groups" eval="[(4, ref('group_odoo_devops_bridge_user'))]"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Admin Account Security: DevOps Admins can access all accounts (including bot accounts) -->
+        <record id="odoo_devops_bridge_account_admin_rule" model="ir.rule">
+            <field name="name">Personal Account: Admin full access</field>
+            <field name="model_id" ref="model_odoo_devops_bridge_account"/>
+            <field name="groups" eval="[(4, ref('group_odoo_devops_bridge_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Multi-Company Rule: DevOps Server -->
+        <record id="odoo_devops_bridge_server_company_rule" model="ir.rule">
+            <field name="name">DevOps Server: Multi-Company Rule</field>
+            <field name="model_id" ref="model_odoo_devops_bridge_server"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in',
+                company_ids)]
+            </field>
+        </record>
+    </data>
 </odoo>

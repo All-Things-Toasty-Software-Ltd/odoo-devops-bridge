@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Part of Odoo Devops Bridge. See LICENSE file for full copyright and licensing details.
+  -->
+
+<odoo>
+    <data noupdate="1">
+        <!-- Cron: Fallback Polling Synchronization -->
+        <record id="ir_cron_odoo_devops_bridge_sync" model="ir.cron">
+            <field name="name">DevOps Bridge: Fallback Polling Synchronization</field>
+            <field name="model_id" ref="model_odoo_devops_bridge_server"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_sync_servers()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <!-- Cron: Cleanup Expired Audit Logs -->
+        <record id="ir_cron_odoo_devops_bridge_cleanup_logs" model="ir.cron">
+            <field name="name">DevOps Bridge: Cleanup Expired Sync Logs</field>
+            <field name="model_id" ref="model_odoo_devops_bridge_sync_log"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_cleanup_logs()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>
