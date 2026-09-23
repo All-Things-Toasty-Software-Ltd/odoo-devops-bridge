@@ -5,15 +5,15 @@ import logging
 from odoo import http, _
 from odoo.http import request, Response
 
-from ..services.odoo_devops_bridge_github_client import OdooDevopsBridgeGithubClient
-from ..services.odoo_devops_bridge_gitlab_client import OdooDevopsBridgeGitlabClient
-from ..services.odoo_devops_bridge_sync_manager import OdooDevopsBridgeSyncManager
-from ..services.odoo_devops_bridge_youtrack_client import OdooDevopsBridgeYoutrackClient
+from ..services.odoo_devops_bridge_github_client import OdooDevOpsBridgeGitHubClient
+from ..services.odoo_devops_bridge_gitlab_client import OdooDevOpsBridgeGitLabClient
+from ..services.odoo_devops_bridge_sync_manager import OdooDevOpsBridgeSyncManager
+from ..services.odoo_devops_bridge_youtrack_client import OdooDevOpsBridgeYouTrackClient
 
 _logger = logging.getLogger(__name__)
 
 
-class OdooDevopsBridgeController(http.Controller):
+class OdooDevOpsBridgeController(http.Controller):
 
     @http.route('/api/v1/devops/webhook/<string:server_uuid>', type='http', auth='public',
                 methods=['POST'], csrf=False)
@@ -21,7 +21,7 @@ class OdooDevopsBridgeController(http.Controller):
         """
         Universal webhook receiver for GitHub, GitLab, and YouTrack events.
         Authenticates payloads using cryptographic HMAC / secret tokens,
-        creates an audit log entry, and dispatches to OdooDevopsBridgeSyncManager.
+        creates an audit log entry, and dispatches to OdooDevOpsBridgeSyncManager.
         """
         raw_payload = request.httprequest.get_data()
         headers = request.httprequest.headers
@@ -44,20 +44,20 @@ class OdooDevopsBridgeController(http.Controller):
         if server.provider == 'github':
             event_type = headers.get('X-GitHub-Event', 'unknown')
             signature = headers.get('X-Hub-Signature-256')
-            is_authenticated = OdooDevopsBridgeGithubClient.verify_webhook_signature(raw_payload,
+            is_authenticated = OdooDevOpsBridgeGitHubClient.verify_webhook_signature(raw_payload,
                                                                                      signature,
                                                                                      server.webhook_secret)
 
         elif server.provider == 'gitlab':
             event_type = headers.get('X-Gitlab-Event', 'unknown')
             token_header = headers.get('X-Gitlab-Token')
-            is_authenticated = OdooDevopsBridgeGitlabClient.verify_webhook_token(token_header,
+            is_authenticated = OdooDevOpsBridgeGitLabClient.verify_webhook_token(token_header,
                                                                                  server.webhook_secret)
 
         elif server.provider == 'youtrack':
             event_type = headers.get('X-YouTrack-Event', 'issue')
             auth_header = headers.get('Authorization') or kwargs.get('token')
-            is_authenticated = OdooDevopsBridgeYoutrackClient.verify_webhook_token(auth_header,
+            is_authenticated = OdooDevOpsBridgeYouTrackClient.verify_webhook_token(auth_header,
                                                                                    server.webhook_secret)
 
         if not is_authenticated:
@@ -91,13 +91,13 @@ class OdooDevopsBridgeController(http.Controller):
         result = {}
         try:
             if server.provider == 'github':
-                result = OdooDevopsBridgeSyncManager.process_github_event(request.env, server,
+                result = OdooDevOpsBridgeSyncManager.process_github_event(request.env, server,
                                                                           event_type, payload)
             elif server.provider == 'gitlab':
-                result = OdooDevopsBridgeSyncManager.process_gitlab_event(request.env, server,
+                result = OdooDevOpsBridgeSyncManager.process_gitlab_event(request.env, server,
                                                                           event_type, payload)
             elif server.provider == 'youtrack':
-                result = OdooDevopsBridgeSyncManager.process_youtrack_event(request.env, server,
+                result = OdooDevOpsBridgeSyncManager.process_youtrack_event(request.env, server,
                                                                             payload)
 
             log_status = 'success' if result.get('status') == 'success' else (
