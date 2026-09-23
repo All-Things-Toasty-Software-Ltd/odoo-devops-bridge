@@ -1,7 +1,44 @@
 <!--
-  ~ Part of Odoo App. See LICENSE file for full copyright and licensing details.
+  ~ Part of Odoo DevOps Bridge. See LICENSE file for full copyright and licensing details.
   -->
 
 <odoo>
+    <record id="view_odoo_devops_bridge_sync_wizard_form" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.sync.wizard.form</field>
+        <field name="model">odoo_devops_bridge.sync.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Synchronize DevOps Repositories &amp; Trackers">
+                <sheet>
+                    <div class="alert alert-info" role="status">
+                        Import or refresh issues, pull requests, comments, and milestones from your
+                        remote provider into Odoo.
+                    </div>
+                    <group>
+                        <group name="target" string="Scope &amp; Destination">
+                            <field name="server_id" options="{'no_create': True}"/>
+                            <field name="provider"/>
+                            <field name="repository_id" options="{'no_create': True}"/>
+                        </group>
+                        <group name="filters" string="Filters &amp; Options">
+                            <field name="sync_scope" widget="radio"/>
+                            <field name="state_filter" widget="radio"/>
+                            <field name="limit"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_execute_sync" type="object" string="Start Synchronization"
+                            class="btn-primary" icon="fa-refresh"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
 
+    <record id="action_odoo_devops_bridge_sync_wizard" model="ir.actions.act_window">
+        <field name="name">Manual Synchronize</field>
+        <field name="res_model">odoo_devops_bridge.sync.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 </odoo>
