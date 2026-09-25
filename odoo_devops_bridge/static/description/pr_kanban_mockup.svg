@@ -1,0 +1,114 @@
+<!--
+  - Part of Odoo Devops Bridge. See LICENSE file for full copyright and licensing details.
+  -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+    <defs>
+        <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="110%">
+            <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#1E293B"
+                          flood-opacity="0.05"/>
+        </filter>
+    </defs>
+
+    <!-- Container -->
+    <rect width="800" height="450" rx="16" fill="#FAFAF9" stroke="#E7E5E4" stroke-width="2"/>
+
+    <!-- Header -->
+    <rect width="800" height="60" rx="16" fill="#FFFFFF"/>
+    <line x1="0" y1="60" x2="800" y2="60" stroke="#E7E5E4" stroke-width="1"/>
+    <text x="28" y="38" font-family="sans-serif" font-weight="800" font-size="20" fill="#292524">
+        Pull Requests / Merge Requests
+    </text>
+    <circle cx="760" cy="30" r="10" fill="#0D9488"/>
+
+    <!-- Column 1: Open -->
+    <g transform="translate(24, 80)">
+        <rect width="232" height="340" rx="12" fill="#F5F5F4"/>
+        <circle cx="20" cy="24" r="5" fill="#0D9488"/>
+        <text x="34" y="28" font-family="sans-serif" font-weight="700" font-size="14"
+              fill="#44403C">Open (3)
+        </text>
+
+        <!-- Card 1 -->
+        <g transform="translate(12, 44)" filter="url(#cardShadow)">
+            <rect width="208" height="80" rx="8" fill="#FFFFFF" stroke="#E7E5E4"/>
+            <rect x="0" y="0" width="5" height="80" fill="#0D9488" id="c1"/>
+            <text x="16" y="24" font-family="sans-serif" font-weight="700" font-size="13"
+                  fill="#1C1917">#142 Fix sync retry
+            </text>
+            <text x="16" y="44" font-family="monospace" font-size="11" fill="#78716C">
+                feature/sync-retry -&gt; main
+            </text>
+            <rect x="16" y="52" width="52" height="18" rx="9" fill="#CCFBF1"/>
+            <text x="26" y="65" font-family="sans-serif" font-size="10" font-weight="700"
+                  fill="#0F766E">review
+            </text>
+        </g>
+
+        <!-- Card 2 -->
+        <g transform="translate(12, 134)" filter="url(#cardShadow)">
+            <rect width="208" height="80" rx="8" fill="#FFFFFF" stroke="#E7E5E4"/>
+            <rect x="0" y="0" width="5" height="80" fill="#0D9488"/>
+            <text x="16" y="24" font-family="sans-serif" font-weight="700" font-size="13"
+                  fill="#1C1917">#143 Webhook HMAC
+            </text>
+            <text x="16" y="44" font-family="monospace" font-size="11" fill="#78716C">
+                fix/hmac-verify -&gt; main
+            </text>
+            <rect x="16" y="52" width="52" height="18" rx="9" fill="#CCFBF1"/>
+            <text x="26" y="65" font-family="sans-serif" font-size="10" font-weight="700"
+                  fill="#0F766E">review
+            </text>
+        </g>
+    </g>
+
+    <!-- Column 2: In Review -->
+    <g transform="translate(284, 80)">
+        <rect width="232" height="340" rx="12" fill="#F5F5F4"/>
+        <circle cx="20" cy="24" r="5" fill="#F59E0B"/>
+        <text x="34" y="28" font-family="sans-serif" font-weight="700" font-size="14"
+              fill="#44403C">In Review (2)
+        </text>
+
+        <!-- Card 1 -->
+        <g transform="translate(12, 44)" filter="url(#cardShadow)">
+            <rect width="208" height="80" rx="8" fill="#FFFFFF" stroke="#E7E5E4"/>
+            <rect x="0" y="0" width="5" height="80" fill="#F59E0B"/>
+            <text x="16" y="24" font-family="sans-serif" font-weight="700" font-size="13"
+                  fill="#1C1917">#145 YouTrack auth
+            </text>
+            <text x="16" y="44" font-family="monospace" font-size="11" fill="#78716C">
+                feat/youtrack-bearer -&gt; main
+            </text>
+            <rect x="16" y="52" width="60" height="18" rx="9" fill="#FEF3C7"/>
+            <text x="24" y="65" font-family="sans-serif" font-size="10" font-weight="700"
+                  fill="#B45309">changes
+            </text>
+        </g>
+    </g>
+
+    <!-- Column 3: Merged -->
+    <g transform="translate(544, 80)">
+        <rect width="232" height="340" rx="12" fill="#F5F5F4"/>
+        <circle cx="20" cy="24" r="5" fill="#8B5CF6"/>
+        <text x="34" y="28" font-family="sans-serif" font-weight="700" font-size="14"
+              fill="#44403C">Merged (3)
+        </text>
+
+        <!-- Card 1 -->
+        <g transform="translate(12, 44)" filter="url(#cardShadow)">
+            <rect width="208" height="80" rx="8" fill="#FFFFFF" stroke="#E7E5E4"/>
+            <rect x="0" y="0" width="5" height="80" fill="#8B5CF6"/>
+            <text x="16" y="24" font-family="sans-serif" font-weight="700" font-size="13"
+                  fill="#1C1917">#148 Odoo 19 portal
+            </text>
+            <text x="16" y="44" font-family="monospace" font-size="11" fill="#78716C">feat/portal-ui
+                -&gt; main
+            </text>
+            <rect x="16" y="52" width="56" height="18" rx="9" fill="#EDE9FE"/>
+            <text x="26" y="65" font-family="sans-serif" font-size="10" font-weight="700"
+                  fill="#6D28D9">merged
+            </text>
+        </g>
+    </g>
+</svg>

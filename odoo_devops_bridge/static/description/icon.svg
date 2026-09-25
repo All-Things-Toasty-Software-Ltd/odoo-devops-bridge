@@ -1,0 +1,63 @@
+<!--
+  - Part of Odoo Devops Bridge. See LICENSE file for full copyright and licensing details.
+  -->
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+    <defs>
+        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FFFDF9"/>
+            <stop offset="100%" stop-color="#FCEFD5"/>
+        </linearGradient>
+        <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#7C2D12"
+                          flood-opacity="0.08"/>
+        </filter>
+    </defs>
+
+    <!-- Background Card -->
+    <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+    <rect x="8" y="8" width="496" height="496" rx="104" fill="none" stroke="#FDBA74"
+          stroke-width="4" stroke-opacity="0.5"/>
+
+    <!-- Glow effect -->
+    <circle cx="256" cy="256" r="140" fill="url(#centerGlow)"/>
+
+    <!-- Connecting Lines -->
+    <g filter="url(#shadow)">
+        <line x1="256" y1="256" x2="256" y2="128" stroke="#F59E0B" stroke-width="14"
+              stroke-linecap="round"/>
+        <line x1="256" y1="256" x2="145" y2="320" stroke="#0D9488" stroke-width="14"
+              stroke-linecap="round"/>
+        <line x1="256" y1="256" x2="367" y2="320" stroke="#8B5CF6" stroke-width="14"
+              stroke-linecap="round"/>
+    </g>
+
+    <!-- Nodes -->
+    <!-- Top Node (GitHub / Warm Orange) -->
+    <g filter="url(#shadow)">
+        <circle cx="256" cy="128" r="38" fill="#FFF8F0" stroke="#F59E0B" stroke-width="12"/>
+        <circle cx="256" cy="128" r="14" fill="#F59E0B"/>
+    </g>
+
+    <!-- Left Node (YouTrack / Teal) -->
+    <g filter="url(#shadow)">
+        <circle cx="145" cy="320" r="38" fill="#F0FDFA" stroke="#0D9488" stroke-width="12"/>
+        <circle cx="145" cy="320" r="14" fill="#0D9488"/>
+    </g>
+
+    <!-- Right Node (GitLab / Violet) -->
+    <g filter="url(#shadow)">
+        <circle cx="367" cy="320" r="38" fill="#F5F3FF" stroke="#8B5CF6" stroke-width="12"/>
+        <circle cx="367" cy="320" r="14" fill="#8B5CF6"/>
+    </g>
+
+    <!-- Central Hub (Odoo Core) -->
+    <g filter="url(#shadow)">
+        <circle cx="256" cy="256" r="48" fill="#FFFFFF" stroke="#E65100" stroke-width="14"/>
+        <circle cx="256" cy="256" r="20" fill="#E65100"/>
+    </g>
+</svg>

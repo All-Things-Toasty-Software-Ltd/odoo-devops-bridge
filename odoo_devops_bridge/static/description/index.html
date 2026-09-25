@@ -1,7 +1,275 @@
 <!--
-  ~ Part of Odoo App. See LICENSE file for full copyright and licensing details.
+  ~ Part of Odoo DevOps Bridge. See LICENSE file for full copyright and licensing details.
   -->
 
-<section>
+<section style="font-family: 'Inter', system-ui, -apple-system, sans-serif; background:#FFFDF9; color:#292524; padding:0; margin:0;">
+<style>
+  .ddb-wrap * { box-sizing: border-box; }
+  .ddb-wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+  .ddb-bg-light { background:#FFFDF9; }
+  .ddb-panel { background:#FAF4EC; border-top:1px solid #F3E8DA; border-bottom:1px solid #F3E8DA; }
+  .ddb-card { background:#FFFFFF; border:1px solid #EADEC9; border-radius:16px; box-shadow: 0 4px 20px -2px rgba(120, 53, 15, 0.04); }
+  .ddb-muted { color:#78716C; }
+  .ddb-teal { color:#0D9488; }
+  .ddb-amber { color:#D97706; }
+  .ddb-violet { color:#7C3AED; }
+  .ddb-h1 { font-size:44px; line-height:1.15; font-weight:800; margin:0 0 16px; color:#1C1917; letter-spacing:-0.02em; }
+  .ddb-h2 { font-size:30px; font-weight:800; margin:0 0 10px; color:#1C1917; letter-spacing:-0.01em; }
+  .ddb-lead { font-size:17px; line-height:1.65; color:#57534E; }
+  .ddb-pill { display:inline-flex; align-items:center; gap:8px; border:1px solid #E7D7C3; background:#FFFBF5; border-radius:999px; padding:6px 14px; font-size:13.5px; font-weight:600; color:#44403C; }
+  .ddb-btn { display:inline-block; padding:14px 28px; border-radius:12px; font-weight:700; font-size:15px; text-decoration:none; transition: all 0.2s ease; }
+  .ddb-btn-primary { background:#EA580C; color:#FFFFFF; box-shadow:0 4px 14px rgba(234, 88, 12, 0.25); }
+  .ddb-btn-ghost { background:#FFFFFF; color:#292524; border:1px solid #D6C4B0; }
+  .ddb-grid-3 { display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; }
+  .ddb-feature { padding:28px; }
+  .ddb-feature h3 { font-size:18px; margin:16px 0 8px; color:#1C1917; font-weight:700; }
+  .ddb-feature p { font-size:14.5px; line-height:1.6; color:#67625D; margin:0; }
+  .ddb-icon { width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+  table.ddb-table { width:100%; border-collapse:collapse; font-size:14.5px; }
+  table.ddb-table th, table.ddb-table td { padding:16px 18px; text-align:left; border-bottom:1px stroke #F0E6D8; }
+  table.ddb-table th { color:#78716C; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:0.04em; }
+  table.ddb-table td { color:#292524; }
+  table.ddb-table tr:last-child td { border-bottom:none; }
+  .ddb-step { display:flex; gap:16px; align-items:flex-start; padding:18px 0; border-bottom:1px solid #F0E6D8; }
+  .ddb-step:last-child { border-bottom:none; }
+  .ddb-step-num { flex:0 0 auto; width:36px; height:36px; border-radius:10px; background:#FEF3C7; color:#D97706; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:15px; }
+  .ddb-code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; background:#F5EBE0; border:1px solid #E6D7C3; border-radius:6px; padding:2px 7px; font-size:13px; color:#C2410C; }
+
+  /* Smooth SVG Flow Animation */
+  @keyframes flowDash {
+    to { stroke-dashoffset: -32; }
+  }
+  @keyframes nodePulse {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.08); opacity: 1; }
+  }
+  .animated-stream {
+    stroke-dasharray: 8 8;
+    animation: flowDash 1.2s linear infinite;
+  }
+  .pulse-hub {
+    transform-origin: center;
+    animation: nodePulse 3s ease-in-out infinite;
+  }
+
+  @media (max-width: 860px) {
+    .ddb-grid-3 { grid-template-columns:1fr; }
+    .ddb-h1 { font-size:34px; }
+  }
+</style>
+
+<div class="ddb-bg-light" style="padding:72px 0 60px;">
+  <div class="ddb-wrap">
+    <div style="display:flex; flex-wrap:wrap; gap:44px; align-items:center;">
+      <div style="flex:1 1 460px; min-width:300px;">
+        <div class="ddb-pill" style="margin-bottom:22px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:#10B981;display:inline-block;"></span>
+          Odoo 19 &middot; Community &amp; Enterprise
+        </div>
+        <h1 class="ddb-h1">One issue tracker.<br/>Three git providers.<br/>Zero copy-paste.</h1>
+        <p class="ddb-lead">Connect Odoo Project to GitHub, GitLab, and JetBrains YouTrack. Tasks, pull requests, comments, and milestones stay in sync in both directions, attributed directly to the developer who made the change.</p>
+        <div style="margin-top:28px; display:flex; gap:12px; flex-wrap:wrap;">
+          <span class="ddb-pill"><span class="ddb-amber">&#9679;</span>&nbsp;GitHub</span>
+          <span class="ddb-pill"><span class="ddb-violet">&#9679;</span>&nbsp;GitLab</span>
+          <span class="ddb-pill"><span class="ddb-teal">&#9679;</span>&nbsp;YouTrack</span>
+        </div>
+      </div>
+      <div style="flex:1 1 440px; min-width:300px;">
+        <img src="banner.svg" alt="DevOps Project Bridge overview" style="width:100%; border-radius:18px; border:1px solid #EADEC9; box-shadow:0 12px 32px -8px rgba(120,53,15,0.08); display:block;"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ddb-panel" style="padding:68px 0;">
+  <div class="ddb-wrap">
+    <h2 class="ddb-h2">Built for how developers actually work</h2>
+    <p class="ddb-lead" style="max-width:620px; margin-bottom:40px;">Every capability below works identically across GitHub, GitLab, and YouTrack for both cloud and self-hosted options.</p>
+
+    <div class="ddb-grid-3">
+      <div class="ddb-card ddb-feature">
+        <div class="ddb-icon" style="background:#CCFBF1;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 3v10a3 3 0 0 0 3 3h7" stroke="#0D9488" stroke-width="2.2" stroke-linecap="round"/><circle cx="7" cy="3" r="2.5" fill="#0D9488"/><circle cx="17" cy="19" r="2.5" fill="#0D9488"/><path d="M17 16v-6" stroke="#0D9488" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Two-way sync</h3>
+        <p>Task title, description, stage, assignees, and milestones flow to the remote issue, and remote edits flow right back, with a recursion guard that prevents update loops.</p>
+      </div>
+      <div class="ddb-card ddb-feature">
+        <div class="ddb-icon" style="background:#FEF3C7;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#D97706" stroke-width="2.2"/><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="#D97706" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Actions attributed to people</h3>
+        <p>Every internal user links their own Personal Access Token. What they create or comment on in Odoo shows up under their own external identity. Not a shared service account.</p>
+      </div>
+      <div class="ddb-card ddb-feature">
+        <div class="ddb-icon" style="background:#EDE9FE;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="2.5" stroke="#7C3AED" stroke-width="2.2"/><path d="M3 9h18" stroke="#7C3AED" stroke-width="2.2"/><circle cx="7" cy="6.5" r="1" fill="#7C3AED"/></svg>
+        </div>
+        <h3>Bot accounts for automation</h3>
+        <p>Configure a fallback service account per server to handle webhook ingestion, cron polling, and any action that doesn't have a matching personal token.</p>
+      </div>
+      <div class="ddb-card ddb-feature">
+        <div class="ddb-icon" style="background:#CCFBF1;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" fill="#0D9488"/></svg>
+        </div>
+        <h3>Instant webhooks + fallback polling</h3>
+        <p>A single verified webhook endpoint handles all three providers with HMAC / secret-token authentication. An optional hourly cron catches anything a webhook missed.</p>
+      </div>
+      <div class="ddb-card ddb-feature">
+        <div class="ddb-icon" style="background:#FEF3C7;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="2.5" stroke="#D97706" stroke-width="2.2"/><circle cx="6" cy="18" r="2.5" stroke="#D97706" stroke-width="2.2"/><circle cx="18" cy="6" r="2.5" stroke="#D97706" stroke-width="2.2"/><path d="M6 8.5V15.5M8.5 6H14a3 3 0 0 1 3 3v-3" stroke="#D97706" stroke-width="2.2"/></svg>
+        </div>
+        <h3>Pull request tracking</h3>
+        <p>Branches, review status, merge commit, additions/deletions, and files changed. All auto-linked to the originating task via <span class="ddb-code">#123</span> style references.</p>
+      </div>
+      <div class="ddb-card ddb-feature">
+        <div class="ddb-icon" style="background:#EDE9FE;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5a1 1 0 0 1 1-1h11l4 4v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" stroke="#7C3AED" stroke-width="2.2"/><path d="M8 13l2.5 2.5L16 10" stroke="#7C3AED" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Full audit trail</h3>
+        <p>Every inbound and outbound event is logged with its payload and outcome. Failed events can be replayed in one click once the underlying issue is fixed.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ddb-bg-light" style="padding:68px 0;">
+  <div class="ddb-wrap">
+    <h2 class="ddb-h2">One module, every deployment</h2>
+    <p class="ddb-lead" style="max-width:620px; margin-bottom:32px;">Cloud teams and self-hosted / on-premise teams are both first-class citizens.</p>
+
+    <div class="ddb-card" style="padding:10px 24px; overflow-x:auto;">
+      <table class="ddb-table">
+        <thead>
+          <tr>
+            <th>Provider</th>
+            <th>Cloud / SaaS</th>
+            <th>Self-Hosted</th>
+            <th>Authentication</th>
+            <th>Webhook Verification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong class="ddb-amber">GitHub</strong></td>
+            <td>github.com</td>
+            <td>GitHub Enterprise Server</td>
+            <td>Classic &amp; Fine-Grained PAT</td>
+            <td>HMAC SHA-256 (<span class="ddb-code">X-Hub-Signature-256</span>)</td>
+          </tr>
+          <tr>
+            <td><strong class="ddb-violet">GitLab</strong></td>
+            <td>gitlab.com</td>
+            <td>GitLab CE / EE Self-Hosted</td>
+            <td>Personal / Project Access Token</td>
+            <td>Secret token (<span class="ddb-code">X-Gitlab-Token</span>)</td>
+          </tr>
+          <tr>
+            <td><strong class="ddb-teal">YouTrack</strong></td>
+            <td>*.youtrack.cloud</td>
+            <td>YouTrack Standalone Server</td>
+            <td>Permanent Bearer Token</td>
+            <td>Bearer secret comparison</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="ddb-panel" style="padding:68px 0;">
+  <div class="ddb-wrap">
+    <div style="display:flex; flex-wrap:wrap; gap:44px; align-items:center;">
+      <div style="flex:1 1 380px; min-width:280px;">
+        <h2 class="ddb-h2">How the sync actually works</h2>
+        <p class="ddb-lead">Admins register a server once. Every internal user links their own token. A single webhook endpoint verifies, logs, and routes every inbound event, with a context-flag guard that stops sync loops instantly.</p>
+        <div style="margin-top:24px;">
+          <div class="ddb-step">
+            <div class="ddb-step-num">1</div>
+            <div><strong>Register</strong> the server &amp; copy the webhook URL + secret <span class="ddb-muted">- DevOps Administrator, once per provider</span></div>
+          </div>
+          <div class="ddb-step">
+            <div class="ddb-step-num">2</div>
+            <div><strong>Connect</strong> your personal token under your Odoo profile <span class="ddb-muted">- every user, once per provider</span></div>
+          </div>
+          <div class="ddb-step">
+            <div class="ddb-step-num">3</div>
+            <div><strong>Work as usual</strong> - tasks, comments, and PR status stay in sync automatically</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fixed & Animated Architecture Diagram -->
+      <div style="flex:1 1 440px; min-width:300px;">
+        <div class="ddb-card" style="padding:24px; background:#FFFFFF;">
+          <svg viewBox="0 0 520 360" style="width:100%; height:auto;">
+            <!-- Outer Background -->
+            <rect x="0" y="0" width="520" height="360" rx="14" fill="#FFFBF5" stroke="#EADEC9" stroke-width="1"/>
+
+            <!-- Animated Stream Lines -->
+            <path d="M165 57 C 200 57, 195 180, 225 180" stroke="#F59E0B" stroke-width="3" fill="none" class="animated-stream"/>
+            <path d="M165 180 L 225 180" stroke="#8B5CF6" stroke-width="3" fill="none" class="animated-stream"/>
+            <path d="M165 303 C 200 303, 195 180, 225 180" stroke="#0D9488" stroke-width="3" fill="none" class="animated-stream"/>
+            <path d="M375 180 L 415 180" stroke="#EA580C" stroke-width="3.5" fill="none" class="animated-stream"/>
+
+            <!-- GitHub Source Box -->
+            <rect x="25" y="30" width="140" height="54" rx="10" fill="#FFF8F0" stroke="#F59E0B" stroke-width="2"/>
+            <text x="95" y="62" fill="#B45309" font-size="14" font-weight="700" text-anchor="middle">GitHub</text>
+
+            <!-- GitLab Source Box -->
+            <rect x="25" y="153" width="140" height="54" rx="10" fill="#F5F3FF" stroke="#8B5CF6" stroke-width="2"/>
+            <text x="95" y="185" fill="#6D28D9" font-size="14" font-weight="700" text-anchor="middle">GitLab</text>
+
+            <!-- YouTrack Source Box -->
+            <rect x="25" y="276" width="140" height="54" rx="10" fill="#F0FDFA" stroke="#0D9488" stroke-width="2"/>
+            <text x="95" y="308" fill="#0F766E" font-size="14" font-weight="700" text-anchor="middle">YouTrack</text>
+
+            <!-- Controller Middle Box -->
+            <rect x="225" y="130" width="150" height="100" rx="12" fill="#FFFFFF" stroke="#EA580C" stroke-width="2" class="pulse-hub"/>
+            <text x="300" y="165" fill="#1C1917" font-size="14" font-weight="800" text-anchor="middle">Webhook</text>
+            <text x="300" y="185" fill="#1C1917" font-size="14" font-weight="800" text-anchor="middle">Controller</text>
+            <rect x="240" y="198" width="120" height="20" rx="10" fill="#FEF3C7"/>
+            <text x="300" y="212" fill="#92400E" font-size="10.5" font-weight="700" text-anchor="middle">HMAC &amp; Loop Guard</text>
+
+            <!-- Target Odoo Box -->
+            <rect x="415" y="145" width="80" height="70" rx="12" fill="#EA580C"/>
+            <text x="455" y="186" fill="#FFFFFF" font-size="15" font-weight="800" text-anchor="middle">Odoo</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ddb-bg-light" style="padding:68px 0;">
+  <div class="ddb-wrap">
+    <div style="display:flex; flex-wrap:wrap-reverse; gap:44px; align-items:center;">
+      <div style="flex:1 1 440px; min-width:300px;">
+        <img src="pr_kanban_mockup.svg" alt="Pull request kanban board" style="width:100%; border-radius:18px; border:1px solid #EADEC9; box-shadow:0 12px 32px -8px rgba(120,53,15,0.08); display:block;"/>
+      </div>
+      <div style="flex:1 1 380px; min-width:280px;">
+        <h2 class="ddb-h2">Pull requests, without leaving Odoo</h2>
+        <p class="ddb-lead">A dedicated kanban board tracks every pull / merge request across every connected repository. Branch names, review state, and merge status all at a glance, auto-linked back to the task that started it.</p>
+        <ul class="ddb-lead" style="padding-left:20px; margin-top:20px; color:#57534E;">
+          <li style="margin-bottom:8px;">Source &amp; target branch, commits, additions/deletions, files changed</li>
+          <li style="margin-bottom:8px;">Review status: pending, approved, changes requested</li>
+          <li>One click through to the PR on GitHub or GitLab</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ddb-panel" style="padding:64px 0;">
+  <div class="ddb-wrap" style="text-align:center;">
+    <h2 class="ddb-h2" style="margin-bottom:8px;">Ready to connect your repositories?</h2>
+    <p class="ddb-lead" style="max-width:520px; margin:0 auto 28px;">Install the module, register a server, and you'll have your first synced task within minutes.</p>
+    <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+      <a href="https://git.toastysoftware.co.uk/toasty-software/odoo-devops-bridge" class="ddb-btn ddb-btn-primary">Install DevOps Project Bridge</a>
+      <a href="https://www.toastysoftware.co.uk/journal/odoo-devops-bridge-9" class="ddb-btn ddb-btn-ghost">Read the Admin Guide</a>
+    </div>
+    <p class="ddb-muted" style="margin-top:32px; font-size:13.5px;">Licensed under LGPL-3 &middot; Maintained by All Things Toasty Software Ltd</p>
+  </div>
+</div>
 
 </section>
