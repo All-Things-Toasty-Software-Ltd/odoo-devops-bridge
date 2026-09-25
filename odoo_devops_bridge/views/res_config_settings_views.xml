@@ -1,0 +1,36 @@
+<!--
+  ~ Part of Odoo DevOps Bridge. See LICENSE file for full copyright and licensing details.
+  -->
+
+<odoo>
+    <record id="res_config_settings_view_form_odoo_devops_bridge" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.odoo_devops_bridge</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="60"/>
+        <field name="inherit_id" ref="project.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='project']" position="inside">
+                <block title="DevOps Project Bridge" id="odoo_devops_bridge_settings">
+                    <setting id="devops_webhook_base_url_setting"
+                             help="Override the base URL sent to external webhooks if Odoo is running behind a proxy or tunnel.">
+                        <field name="devops_webhook_base_url"
+                               placeholder="https://odoo.yourcompany.com"/>
+                    </setting>
+                    <setting id="devops_auto_retry_setting"
+                             help="Automatically retry failed webhook sync events via the scheduled cron job.">
+                        <field name="devops_auto_retry_failed_sync"/>
+                    </setting>
+                    <setting id="devops_retention_setting"
+                             help="Automatically delete synchronization audit logs older than this duration.">
+                        <div class="content-group">
+                            <div class="mt16">
+                                <field name="devops_log_retention_days" class="oe_inline"/>
+                                days
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

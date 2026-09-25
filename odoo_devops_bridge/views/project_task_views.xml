@@ -1,0 +1,123 @@
+<!--
+  ~ Part of Odoo DevOps Bridge. See LICENSE file for full copyright and licensing details.
+  -->
+
+<odoo>
+    <!-- Extend Task Form View -->
+    <record id="view_project_task_form_odoo_devops_bridge" model="ir.ui.view">
+        <field name="name">project.task.form.odoo_devops_bridge</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_close_devops_issue" type="object" string="Close Remote Issue"
+                        class="btn-secondary"
+                        invisible="not devops_repo_id or not devops_external_id"/>
+                <button name="action_reopen_devops_issue" type="object" string="Reopen Remote Issue"
+                        class="btn-secondary"
+                        invisible="not devops_repo_id or not devops_external_id"/>
+                <button name="action_sync_to_devops" type="object" string="Sync to DevOps"
+                        class="btn-secondary" icon="fa-cloud-upload"/>
+                <button name="action_open_external_url" type="object" string="Open Remote Issue"
+                        class="btn-link" icon="fa-external-link" invisible="not devops_web_url"/>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_devops_prs" type="object" class="oe_stat_button"
+                        icon="fa-code-fork" invisible="devops_pull_request_count == 0">
+                    <field name="devops_pull_request_count" widget="statinfo"
+                           string="Pull Requests"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="devops_issue_type" widget="badge"
+                       decoration-danger="devops_issue_type == 'bug'"
+                       decoration-info="devops_issue_type == 'feature'"
+                       decoration-warning="devops_issue_type == 'recommendation'"
+                       decoration-primary="devops_issue_type == 'documentation'"
+                       decoration-muted="devops_issue_type == 'question'"/>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page name="devops_tab" string="DevOps &amp; Code">
+                    <group>
+                        <group name="sync_details" string="Synchronization Status">
+                            <field name="devops_server_id" options="{'no_create': True}"/>
+                            <field name="devops_repo_id" options="{'no_create': True}"/>
+                            <field name="devops_provider" widget="badge"/>
+                            <field name="devops_issue_type" widget="badge"
+                                   decoration-danger="devops_issue_type == 'bug'"
+                                   decoration-info="devops_issue_type == 'feature'"
+                                   decoration-warning="devops_issue_type == 'recommendation'"
+                                   decoration-primary="devops_issue_type == 'documentation'"
+                                   decoration-muted="devops_issue_type == 'question'"/>
+                            <field name="devops_issue_number"/>
+                            <field name="devops_sync_status" widget="badge"
+                                   decoration-success="devops_sync_status == 'synced'"
+                                   decoration-danger="devops_sync_status == 'error'"/>
+                        </group>
+                        <group name="git_details" string="Git &amp; Branch Tracking">
+                            <field name="devops_branch_ref" widget="CopyClipboardChar"
+                                   string="Suggested Branch"/>
+                            <field name="devops_web_url" widget="url" string="External URL"/>
+                            <field name="devops_external_id" readonly="1"
+                                   groups="base.group_no_one"/>
+                        </group>
+                    </group>
+
+                    <group string="Issue Dependencies &amp; Relationships">
+                        <group string="Blocked By (Depends On)">
+                            <field name="depend_on_ids" widget="many2many_tags"
+                                   placeholder="Issues that block this task..."/>
+                        </group>
+                        <group string="Blocks (Dependent Issues)">
+                            <field name="dependent_ids" widget="many2many_tags"
+                                   placeholder="Issues blocked by this task..."/>
+                        </group>
+                    </group>
+
+                    <group string="Associated Pull Requests &amp; Merges">
+                        <field name="devops_pull_request_ids" nolabel="1">
+                            <list>
+                                <field name="number"/>
+                                <field name="name"/>
+                                <field name="state" widget="badge"
+                                       decoration-success="state == 'merged'"
+                                       decoration-info="state == 'open'"
+                                       decoration-muted="state == 'closed'"/>
+                                <field name="source_branch"/>
+                                <field name="target_branch"/>
+                                <field name="review_status" widget="badge"/>
+                                <button name="action_open_external_url" type="object" string="View"
+                                        class="btn-sm btn-link" icon="fa-external-link"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extend Task Search View to filter / group by issue type -->
+    <record id="view_task_search_form_odoo_devops_bridge" model="ir.ui.view">
+        <field name="name">project.task.search.form.odoo_devops_bridge</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form_base"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='open_tasks']" position="before">
+                <filter string="Bugs" name="filter_devops_bugs"
+                        domain="[('devops_issue_type', '=', 'bug')]"/>
+                <filter string="Features" name="filter_devops_features"
+                        domain="[('devops_issue_type', '=', 'feature')]"/>
+                <filter string="Recommendations" name="filter_devops_recommendations"
+                        domain="[('devops_issue_type', '=', 'recommendation')]"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Issue Type" name="group_by_devops_issue_type" domain="[]"
+                        context="{'group_by': 'devops_issue_type'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

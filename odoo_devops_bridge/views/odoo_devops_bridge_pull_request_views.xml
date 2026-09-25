@@ -1,0 +1,225 @@
+<!--
+  ~ Part of Odoo DevOps Bridge. See LICENSE file for full copyright and licensing details.
+  -->
+
+<odoo>
+    <!-- PR Kanban View -->
+    <record id="view_odoo_devops_bridge_pull_request_kanban" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.pull.request.kanban</field>
+        <field name="model">odoo_devops_bridge.pull.request</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" quick_create="false">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="number"/>
+                <field name="state"/>
+                <field name="repository_id"/>
+                <field name="source_branch"/>
+                <field name="target_branch"/>
+                <field name="author_username"/>
+                <field name="review_status"/>
+                <field name="is_merged"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="badge bg-secondary">#
+                                <field name="number"/>
+                            </span>
+                            <field name="state" widget="badge"
+                                   decoration-success="state == 'merged'"
+                                   decoration-info="state == 'open'"
+                                   decoration-muted="state == 'closed'"/>
+                        </div>
+                        <div class="fw-bold fs-6 text-truncate mb-1">
+                            <field name="name"/>
+                        </div>
+                        <div class="text-muted small mb-2">
+                            <i class="fa fa-code-fork me-1" title="Branch"/>
+                            <field name="source_branch"/> &#8594;
+                            <field name="target_branch"/>
+                        </div>
+                        <div class="mb-2">
+                            <field name="tag_ids" widget="many2many_tags"/>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center small">
+                            <span class="text-muted">
+                                <i class="fa fa-user me-1" title="Author"/>
+                                @
+                                <field name="author_username"/>
+                            </span>
+                            <field name="review_status" widget="badge"
+                                   decoration-success="review_status == 'approved'"
+                                   decoration-danger="review_status == 'changes_requested'"
+                                   decoration-warning="review_status == 'pending'"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- PR List View -->
+    <record id="view_odoo_devops_bridge_pull_request_list" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.pull.request.list</field>
+        <field name="model">odoo_devops_bridge.pull.request</field>
+        <field name="arch" type="xml">
+            <list string="Pull Requests &amp; Merges" decoration-success="state == 'merged'"
+                  decoration-info="state == 'open'" decoration-muted="state == 'closed'">
+                <field name="number"/>
+                <field name="name"/>
+                <field name="repository_id"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                <field name="milestone_id"/>
+                <field name="tag_ids" widget="many2many_tags" optional="show"/>
+                <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
+                <field name="source_branch"/>
+                <field name="target_branch"/>
+                <field name="author_username"/>
+                <field name="review_status" widget="badge"
+                       decoration-success="review_status == 'approved'"
+                       decoration-danger="review_status == 'changes_requested'"
+                       decoration-warning="review_status == 'pending'"/>
+                <field name="state" widget="badge" decoration-success="state == 'merged'"
+                       decoration-info="state == 'open'" decoration-muted="state == 'closed'"/>
+                <button name="action_open_external_url" type="object" string="View"
+                        class="btn-sm btn-link" icon="fa-external-link"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- PR Form View -->
+    <record id="view_odoo_devops_bridge_pull_request_form" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.pull.request.form</field>
+        <field name="model">odoo_devops_bridge.pull.request</field>
+        <field name="arch" type="xml">
+            <form string="Pull Request / Merge Request">
+                <header>
+                    <button name="action_merge_pr" type="object" string="Merge" class="btn-success"
+                            invisible="state != 'open'"/>
+                    <button name="action_close_pr" type="object" string="Close PR"
+                            class="btn-secondary" invisible="state != 'open'"/>
+                    <button name="action_reopen_pr" type="object" string="Reopen PR"
+                            class="btn-secondary" invisible="state != 'closed'"/>
+                    <button name="action_sync_to_devops" type="object" string="Push to Remote"
+                            class="btn-secondary"/>
+                    <button name="action_open_external_url" type="object" string="Open in Browser"
+                            class="btn-primary" icon="fa-external-link"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,merged,closed"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Merged" bg_color="text-bg-success"
+                            invisible="not is_merged"/>
+                    <widget name="web_ribbon" title="Closed" bg_color="text-bg-secondary"
+                            invisible="state != 'closed'"/>
+
+                    <div class="oe_title">
+                        <span class="text-muted fs-4">#
+                            <field name="number" readonly="1"/>
+                        </span>
+                        <h1>
+                            <field name="name" placeholder="Pull Request Title"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group name="branch_info" string="Branch &amp; Repository">
+                            <field name="server_id" options="{'no_create': True}"/>
+                            <field name="provider"/>
+                            <field name="repository_id" options="{'no_create': True}"/>
+                            <field name="source_branch"/>
+                            <field name="target_branch"/>
+                            <field name="author_username"/>
+                            <field name="web_url" widget="url"/>
+                        </group>
+                        <group name="task_link" string="Project &amp; Issue Tracking">
+                            <field name="project_id" options="{'no_create': True}"/>
+                            <field name="task_id" options="{'no_create': True}"/>
+                            <field name="milestone_id" options="{'no_create': True}"/>
+                            <field name="user_ids" widget="many2many_avatar_user"/>
+                            <field name="reviewer_ids" widget="many2many_avatar_user"/>
+                            <field name="tag_ids" widget="many2many_tags" placeholder="Labels..."/>
+                            <field name="review_status"/>
+                            <field name="devops_sync_status" widget="badge"
+                                   decoration-success="devops_sync_status == 'synced'"
+                                   decoration-danger="devops_sync_status == 'error'"/>
+                        </group>
+                    </group>
+
+                    <group name="diff_stats" string="Changes &amp; Commits">
+                        <group>
+                            <field name="commits_count"/>
+                            <field name="changed_files"/>
+                        </group>
+                        <group>
+                            <field name="additions" string="Additions (+)"/>
+                            <field name="deletions" string="Deletions (-)"/>
+                            <field name="merge_commit_sha" readonly="1" invisible="not is_merged"/>
+                            <field name="merged_at" readonly="1" invisible="not is_merged"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page name="description" string="PR Description">
+                            <field name="description"
+                                   placeholder="Pull request overview and commit summary..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- PR Search View -->
+    <record id="view_odoo_devops_bridge_pull_request_search" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.pull.request.search</field>
+        <field name="model">odoo_devops_bridge.pull.request</field>
+        <field name="arch" type="xml">
+            <search string="Search Pull Requests">
+                <field name="name"/>
+                <field name="number"/>
+                <field name="source_branch"/>
+                <field name="target_branch"/>
+                <field name="author_username"/>
+                <field name="repository_id"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                <field name="milestone_id"/>
+                <field name="tag_ids"/>
+                <filter string="Open" name="open_prs" domain="[('state', '=', 'open')]"/>
+                <filter string="Merged" name="merged_prs" domain="[('state', '=', 'merged')]"/>
+                <filter string="Closed" name="closed_prs" domain="[('state', '=', 'closed')]"/>
+                <separator/>
+                <filter string="Pending Review" name="pending_review"
+                        domain="[('review_status', '=', 'pending')]"/>
+                <filter string="Approved" name="approved_review"
+                        domain="[('review_status', '=', 'approved')]"/>
+                <filter string="Changes Requested" name="changes_requested_review"
+                        domain="[('review_status', '=', 'changes_requested')]"/>
+                <group>
+                    <filter string="Repository" name="group_by_repo" domain="[]"
+                            context="{'group_by': 'repository_id'}"/>
+                    <filter string="Project" name="group_by_project" domain="[]"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Milestone" name="group_by_milestone" domain="[]"
+                            context="{'group_by': 'milestone_id'}"/>
+                    <filter string="Status" name="group_by_state" domain="[]"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Review Status" name="group_by_review" domain="[]"
+                            context="{'group_by': 'review_status'}"/>
+                    <filter string="Author" name="group_by_author" domain="[]"
+                            context="{'group_by': 'author_username'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_odoo_devops_bridge_pull_request" model="ir.actions.act_window">
+        <field name="name">Pull Requests &amp; Merges</field>
+        <field name="res_model">odoo_devops_bridge.pull.request</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_open_prs': 1}</field>
+    </record>
+</odoo>

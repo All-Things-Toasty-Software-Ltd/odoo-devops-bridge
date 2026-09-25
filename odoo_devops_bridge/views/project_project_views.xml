@@ -1,0 +1,45 @@
+<!--
+  ~ Part of Odoo DevOps Bridge. See LICENSE file for full copyright and licensing details.
+  -->
+
+<odoo>
+    <!-- Extend Project Form View -->
+    <record id="view_project_project_form_odoo_devops_bridge" model="ir.ui.view">
+        <field name="name">project.project.form.odoo_devops_bridge</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_devops_repos" type="object" class="oe_stat_button"
+                        icon="fa-code-fork">
+                    <field name="devops_repo_count" widget="statinfo" string="DevOps Repos"/>
+                </button>
+                <button name="action_view_devops_prs" type="object" class="oe_stat_button"
+                        icon="fa-tasks">
+                    <field name="devops_pull_request_count" widget="statinfo"
+                           string="Pull Requests"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page name="devops_integration" string="DevOps Bridge">
+                    <field name="devops_repo_ids">
+                        <list editable="bottom">
+                            <field name="server_id"/>
+                            <field name="provider" widget="badge"/>
+                            <field name="name"/>
+                            <field name="external_slug"/>
+                            <field name="sync_issues" widget="boolean_toggle"/>
+                            <field name="sync_pull_requests" widget="boolean_toggle"/>
+                            <field name="sync_comments" widget="boolean_toggle"/>
+                            <field name="sync_milestones" widget="boolean_toggle"/>
+                            <field name="last_sync_date"/>
+                            <button name="action_sync_now" type="object" string="Sync"
+                                    class="btn-sm btn-link" icon="fa-refresh"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

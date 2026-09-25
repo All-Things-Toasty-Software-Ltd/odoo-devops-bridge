@@ -1,0 +1,143 @@
+<!--
+  ~ Part of Odoo DevOps Bridge. See LICENSE file for full copyright and licensing details.
+  -->
+
+<odoo>
+    <!-- Repository List View -->
+    <record id="view_odoo_devops_bridge_repository_list" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.repository.list</field>
+        <field name="model">odoo_devops_bridge.repository</field>
+        <field name="arch" type="xml">
+            <list string="DevOps Repositories &amp; Trackers">
+                <field name="name"/>
+                <field name="server_id"/>
+                <field name="provider" widget="badge"/>
+                <field name="external_slug"/>
+                <field name="project_id"/>
+                <field name="sync_issues" widget="boolean_toggle"/>
+                <field name="sync_pull_requests" widget="boolean_toggle"/>
+                <field name="sync_comments" widget="boolean_toggle"/>
+                <field name="sync_milestones" widget="boolean_toggle"/>
+                <field name="last_sync_date"/>
+                <button name="action_sync_now" type="object" string="Sync Now"
+                        class="btn-sm btn-primary" icon="fa-refresh"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Repository Form View -->
+    <record id="view_odoo_devops_bridge_repository_form" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.repository.form</field>
+        <field name="model">odoo_devops_bridge.repository</field>
+        <field name="arch" type="xml">
+            <form string="DevOps Repository / External Project Binding">
+                <header>
+                    <button name="action_sync_now" type="object" string="Synchronize Now"
+                            class="btn-primary" icon="fa-refresh"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_tasks" type="object" class="oe_stat_button"
+                                icon="fa-tasks">
+                            <field name="task_count" widget="statinfo" string="Tasks / Issues"/>
+                        </button>
+                        <button name="action_view_pull_requests" type="object"
+                                class="oe_stat_button" icon="fa-code-fork">
+                            <field name="pull_request_count" widget="statinfo"
+                                   string="Pull Requests"/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Repository or Project Name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group name="binding_details" string="Remote Binding">
+                            <field name="server_id" options="{'no_create': True}"/>
+                            <field name="provider"/>
+                            <field name="external_slug"
+                                   placeholder="e.g. owner/repo, group/project, or PROJ"/>
+                            <field name="external_id" readonly="1"/>
+                            <field name="default_branch"/>
+                            <field name="web_url" widget="url"/>
+                        </group>
+                        <group name="odoo_mapping" string="Odoo Integration">
+                            <field name="project_id" options="{'no_create': True}"/>
+                            <field name="team_id" options="{'no_create': True}"/>
+                            <field name="open_stage_id" options="{'no_create': True}"/>
+                            <field name="closed_stage_id" options="{'no_create': True}"/>
+                            <field name="last_sync_date"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page name="sync_toggles" string="Entity Sync Switches">
+                            <group>
+                                <group>
+                                    <field name="sync_issues" widget="boolean_toggle"/>
+                                    <field name="sync_pull_requests" widget="boolean_toggle"/>
+                                </group>
+                                <group>
+                                    <field name="sync_comments" widget="boolean_toggle"/>
+                                    <field name="sync_milestones" widget="boolean_toggle"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="pull_requests" string="Pull Requests / Merge Requests">
+                            <field name="pull_request_ids">
+                                <list>
+                                    <field name="number"/>
+                                    <field name="name"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'merged'"
+                                           decoration-info="state == 'open'"
+                                           decoration-muted="state == 'closed'"/>
+                                    <field name="source_branch"/>
+                                    <field name="target_branch"/>
+                                    <field name="task_id"/>
+                                    <field name="author_username"/>
+                                    <button name="action_open_external_url" type="object"
+                                            string="View" class="btn-sm btn-link"
+                                            icon="fa-external-link"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Repository Search View -->
+    <record id="view_odoo_devops_bridge_repository_search" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.repository.search</field>
+        <field name="model">odoo_devops_bridge.repository</field>
+        <field name="arch" type="xml">
+            <search string="Search Repositories">
+                <field name="name"/>
+                <field name="external_slug"/>
+                <field name="server_id"/>
+                <field name="project_id"/>
+                <group>
+                    <filter string="Server" name="group_by_server" domain="[]"
+                            context="{'group_by': 'server_id'}"/>
+                    <filter string="Project" name="group_by_project" domain="[]"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter string="Team" name="group_by_team" domain="[]"
+                            context="{'group_by': 'team_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_odoo_devops_bridge_repository" model="ir.actions.act_window">
+        <field name="name">Repositories &amp; Trackers</field>
+        <field name="res_model">odoo_devops_bridge.repository</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

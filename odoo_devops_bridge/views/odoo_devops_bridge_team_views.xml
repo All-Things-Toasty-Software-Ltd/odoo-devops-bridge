@@ -1,0 +1,77 @@
+<!--
+  ~ Part of Odoo DevOps Bridge. See LICENSE file for full copyright and licensing details.
+  -->
+
+<odoo>
+    <!-- Team List View -->
+    <record id="view_odoo_devops_bridge_team_list" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.team.list</field>
+        <field name="model">odoo_devops_bridge.team</field>
+        <field name="arch" type="xml">
+            <list string="DevOps Teams &amp; Organizations">
+                <field name="name"/>
+                <field name="server_id"/>
+                <field name="provider" widget="badge"/>
+                <field name="slug"/>
+                <field name="external_id"/>
+                <field name="member_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Team Form View -->
+    <record id="view_odoo_devops_bridge_team_form" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.team.form</field>
+        <field name="model">odoo_devops_bridge.team</field>
+        <field name="arch" type="xml">
+            <form string="DevOps Team / Organization">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Organization / Team Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="server_id" options="{'no_create': True}"/>
+                            <field name="provider"/>
+                            <field name="slug" placeholder="e.g. org-name or group-slug"/>
+                        </group>
+                        <group>
+                            <field name="external_id"/>
+                            <field name="web_url" widget="url"/>
+                        </group>
+                    </group>
+                    <group string="Team Members">
+                        <field name="member_ids" widget="many2many_tags"
+                               placeholder="Select Odoo users in this team..."/>
+                    </group>
+                    <notebook>
+                        <page string="Repositories" name="repos">
+                            <field name="repository_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="external_slug"/>
+                                    <field name="project_id"/>
+                                    <field name="last_sync_date"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Description" name="description">
+                            <field name="description"
+                                   placeholder="Notes on team responsibilities and projects..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_odoo_devops_bridge_team" model="ir.actions.act_window">
+        <field name="name">Teams &amp; Organizations</field>
+        <field name="res_model">odoo_devops_bridge.team</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

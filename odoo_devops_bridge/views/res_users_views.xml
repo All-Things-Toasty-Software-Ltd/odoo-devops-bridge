@@ -1,0 +1,68 @@
+<!--
+  ~ Part of Odoo DevOps Bridge. See LICENSE file for full copyright and licensing details.
+  -->
+
+<odoo>
+    <!-- Extend User Form View with DevOps Accounts Tab -->
+    <record id="view_users_form_odoo_devops_bridge" model="ir.ui.view">
+        <field name="name">res.users.form.odoo_devops_bridge</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="devops_accounts" string="DevOps Access Tokens"
+                      groups="odoo_devops_bridge.group_odoo_devops_bridge_user">
+                    <div class="alert alert-info" role="status">
+                        Connect your personal developer accounts for GitHub, GitLab, and YouTrack.
+                        When you create issues, post comments, or update tasks in Odoo, they will be
+                        attributed to your external account!
+                    </div>
+                    <field name="devops_account_ids"
+                           context="{'default_user_id': id, 'default_account_type': 'personal'}">
+                        <list editable="bottom">
+                            <field name="server_id"/>
+                            <field name="provider" widget="badge"/>
+                            <field name="token" password="True"/>
+                            <field name="external_username"/>
+                            <field name="state" widget="badge" decoration-success="state == 'valid'"
+                                   decoration-danger="state == 'invalid'"/>
+                            <button name="action_verify" type="object" string="Verify"
+                                    class="btn-sm btn-link" icon="fa-check"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extend User Preferences View -->
+    <record id="view_users_form_simple_modif_odoo_devops_bridge" model="ir.ui.view">
+        <field name="name">res.users.preferences_form.odoo_devops_bridge</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="devops_prefs" string="DevOps Accounts"
+                      groups="odoo_devops_bridge.group_odoo_devops_bridge_user">
+                    <div class="alert alert-info" role="status">
+                        Add your Personal Access Tokens (PATs) here to connect your personal
+                        developer identity.
+                    </div>
+                    <field name="devops_account_ids"
+                           context="{'default_user_id': id, 'default_account_type': 'personal'}">
+                        <list editable="bottom">
+                            <field name="server_id"/>
+                            <field name="provider" widget="badge"/>
+                            <field name="token" password="True"/>
+                            <field name="external_username"/>
+                            <field name="state" widget="badge" decoration-success="state == 'valid'"
+                                   decoration-danger="state == 'invalid'"/>
+                            <button name="action_verify" type="object" string="Verify"
+                                    class="btn-sm btn-link" icon="fa-check"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

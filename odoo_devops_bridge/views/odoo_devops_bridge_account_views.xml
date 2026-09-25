@@ -3,62 +3,139 @@
   -->
 
 <odoo>
-    <data>
-        <!-- explicit list view definition -->
-        <!--
-            <record model="ir.ui.view" id="odoo_app.list">
-              <field name="name">odoo_app list</field>
-              <field name="model">odoo_app.models</field>
-              <field name="arch" type="xml">
-                <list>
-                  <field name="name"/>
-                  <field name="value"/>
-                  <field name="value2"/>
-                </list>
-              </field>
-            </record>
-        -->
+    <!-- Account List View -->
+    <record id="view_odoo_devops_bridge_account_list" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.account.list</field>
+        <field name="model">odoo_devops_bridge.account</field>
+        <field name="arch" type="xml">
+            <list string="DevOps Accounts" decoration-success="state == 'valid'"
+                  decoration-danger="state == 'invalid'" decoration-muted="state == 'untested'">
+                <field name="name"/>
+                <field name="server_id"/>
+                <field name="provider" widget="badge"/>
+                <field name="account_type" widget="badge"/>
+                <field name="user_id"/>
+                <field name="external_username"/>
+                <field name="state" widget="badge" decoration-success="state == 'valid'"
+                       decoration-danger="state == 'invalid'"/>
+                <field name="last_verified_at"/>
+                <field name="active" widget="boolean_toggle"/>
+                <button name="action_verify" type="object" string="Verify Token"
+                        class="btn-sm btn-link" icon="fa-check-circle"/>
+            </list>
+        </field>
+    </record>
 
-        <!-- actions opening views on models -->
-        <!--
-            <record model="ir.actions.act_window" id="odoo_app.action_window">
-              <field name="name">odoo_app window</field>
-              <field name="res_model">odoo_app.models</field>
-              <field name="view_mode">list,form</field>
-            </record>
-        -->
+    <!-- Account Form View -->
+    <record id="view_odoo_devops_bridge_account_form" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.account.form</field>
+        <field name="model">odoo_devops_bridge.account</field>
+        <field name="arch" type="xml">
+            <form string="DevOps Account Credentials">
+                <header>
+                    <button name="action_verify" type="object" string="Verify Credentials"
+                            class="btn-primary" icon="fa-key"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="untested,valid,invalid"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Verified" bg_color="text-bg-success"
+                            invisible="state != 'valid'"/>
+                    <widget name="web_ribbon" title="Invalid" bg_color="text-bg-danger"
+                            invisible="state != 'invalid'"/>
 
-        <!-- server action to the one above -->
-        <!--
-            <record model="ir.actions.server" id="odoo_app.action_server">
-              <field name="name">odoo_app server</field>
-              <field name="model_id" ref="model_odoo_app_models"/>
-              <field name="state">code</field>
-              <field name="code">
-                action = {
-                  "type": "ir.actions.act_window",
-                  "view_mode": "list,form",
-                  "res_model": model._name,
-                }
-              </field>
-            </record>
-        -->
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Personal or Bot Account Label"/>
+                        </h1>
+                    </div>
 
-        <!-- Top menu item -->
-        <!--
-            <menuitem name="odoo_app" id="odoo_app.menu_root"/>
-        -->
-        <!-- menu categories -->
-        <!--
-            <menuitem name="Menu 1" id="odoo_app.menu_1" parent="odoo_app.menu_root"/>
-            <menuitem name="Menu 2" id="odoo_app.menu_2" parent="odoo_app.menu_root"/>
-        -->
-        <!-- actions -->
-        <!--
-            <menuitem name="List" id="odoo_app.menu_1_list" parent="odoo_app.menu_1"
-                      action="odoo_app.action_window"/>
-            <menuitem name="Server to list" id="odoo_app" parent="odoo_app.menu_2"
-                      action="odoo_app.action_server"/>
-        -->
-    </data>
+                    <group>
+                        <group name="server_auth" string="Server &amp; Type">
+                            <field name="server_id" options="{'no_create': True}"/>
+                            <field name="provider"/>
+                            <field name="account_type" widget="radio"
+                                   options="{'horizontal': true}"/>
+                            <field name="user_id" options="{'no_create': True}"
+                                   invisible="account_type != 'personal'"/>
+                        </group>
+                        <group name="credentials" string="Authentication Credentials">
+                            <field name="token" password="True"
+                                   placeholder="Enter Personal Access Token (PAT)"/>
+                            <field name="external_username"
+                                   placeholder="Auto-populated upon verification"/>
+                            <field name="external_user_id" readonly="1"/>
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="last_verified_at"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-danger" role="alert" invisible="not error_message">
+                        <strong>Verification Error:</strong>
+                        <field name="error_message" readonly="1"/>
+                    </div>
+
+                    <div class="alert alert-info" role="status">
+                        <p>
+                            <strong>Required Token Scopes:</strong>
+                        </p>
+                        <ul>
+                            <li>
+                                <strong>GitHub:</strong>
+                                Scopes <code>repo</code>, <code>read:org</code>, <code>project
+                            </code> (for Classic PAT) or Read/Write access to Issues, Pull Requests,
+                                and Metadata (Fine-grained PAT).
+                            </li>
+                            <li>
+                                <strong>GitLab:</strong>
+                                Scopes <code>api</code> or <code>read_api</code>, <code>
+                                write_repository</code>.
+                            </li>
+                            <li>
+                                <strong>YouTrack:</strong>
+                                Permanent Token with scopes <code>YouTrack</code> or <code>Read and
+                                Write Issue / Project</code>.
+                            </li>
+                        </ul>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Account Search View -->
+    <record id="view_odoo_devops_bridge_account_search" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.account.search</field>
+        <field name="model">odoo_devops_bridge.account</field>
+        <field name="arch" type="xml">
+            <search string="Search DevOps Accounts">
+                <field name="name"/>
+                <field name="server_id"/>
+                <field name="user_id"/>
+                <field name="external_username"/>
+                <filter string="My Accounts" name="my_accounts" domain="[('user_id', '=', uid)]"/>
+                <filter string="Bot Accounts" name="bot_accounts"
+                        domain="[('account_type', '=', 'bot')]"/>
+                <filter string="Valid" name="valid" domain="[('state', '=', 'valid')]"/>
+                <filter string="Invalid" name="invalid" domain="[('state', '=', 'invalid')]"/>
+                <group>
+                    <filter string="Server" name="group_by_server" domain="[]"
+                            context="{'group_by': 'server_id'}"/>
+                    <filter string="Account Type" name="group_by_type" domain="[]"
+                            context="{'group_by': 'account_type'}"/>
+                    <filter string="User" name="group_by_user" domain="[]"
+                            context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_odoo_devops_bridge_account" model="ir.actions.act_window">
+        <field name="name">DevOps Accounts &amp; Tokens</field>
+        <field name="res_model">odoo_devops_bridge.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_my_accounts': 1}</field>
+    </record>
 </odoo>

@@ -1,0 +1,77 @@
+<!--
+  ~ Part of Odoo DevOps Bridge. See LICENSE file for full copyright and licensing details.
+  -->
+
+<odoo>
+    <!-- Top-Level App Menu -->
+    <menuitem id="menu_odoo_devops_bridge_bridge_root"
+              name="DevOps Bridge"
+              sequence="65"
+              web_icon="odoo_devops_bridge,static/description/icon.png"
+              groups="group_odoo_devops_bridge_user"/>
+
+    <!-- Operations Submenu -->
+    <menuitem id="menu_odoo_devops_bridge_operations"
+              name="Operations"
+              parent="menu_odoo_devops_bridge_root"
+              sequence="10"/>
+
+    <menuitem id="menu_odoo_devops_bridge_pull_requests"
+              name="Pull Requests &amp; Merges"
+              parent="menu_odoo_devops_bridge_operations"
+              action="action_odoo_devops_bridge_pull_request"
+              sequence="10"/>
+
+    <menuitem id="menu_odoo_devops_bridge_repositories"
+              name="Repositories &amp; Trackers"
+              parent="menu_odoo_devops_bridge_operations"
+              action="action_odoo_devops_bridge_repository"
+              sequence="20"/>
+
+    <menuitem id="menu_odoo_devops_bridge_teams"
+              name="Teams &amp; Organizations"
+              parent="menu_odoo_devops_bridge_operations"
+              action="action_odoo_devops_bridge_team"
+              sequence="30"/>
+
+    <menuitem id="menu_odoo_devops_bridge_manual_sync"
+              name="Manual Synchronize"
+              parent="menu_odoo_devops_bridge_operations"
+              action="action_odoo_devops_bridge_sync_wizard"
+              groups="group_odoo_devops_bridge_manager"
+              sequence="40"/>
+
+    <!-- Configuration Submenu -->
+    <menuitem id="menu_odoo_devops_bridge_configuration"
+              name="Configuration"
+              parent="menu_odoo_devops_bridge_root"
+              sequence="20"/>
+
+    <menuitem id="menu_odoo_devops_bridge_servers"
+              name="DevOps Servers"
+              parent="menu_odoo_devops_bridge_configuration"
+              action="action_odoo_devops_bridge_server"
+              groups="group_odoo_devops_bridge_admin"
+              sequence="10"/>
+
+    <menuitem id="menu_odoo_devops_bridge_accounts"
+              name="My Accounts &amp; Tokens"
+              parent="menu_odoo_devops_bridge_configuration"
+              action="action_odoo_devops_bridge_account"
+              groups="group_odoo_devops_bridge_user"
+              sequence="20"/>
+
+    <menuitem id="menu_odoo_devops_bridge_sync_logs"
+              name="Sync Audit Logs"
+              parent="menu_odoo_devops_bridge_configuration"
+              action="action_odoo_devops_bridge_sync_log"
+              groups="group_odoo_devops_bridge_manager"
+              sequence="30"/>
+
+    <!-- Convenience link inside Odoo Project App -->
+    <menuitem id="menu_project_odoo_devops_bridge_pull_requests"
+              name="DevOps Pull Requests"
+              parent="project.menu_main_pm"
+              action="action_odoo_devops_bridge_pull_request"
+              sequence="35"/>
+</odoo>

@@ -1,0 +1,229 @@
+<!--
+  ~ Part of Odoo DevOps Bridge. See LICENSE file for full copyright and licensing details.
+  -->
+
+<odoo>
+    <!-- Server List View -->
+    <record id="view_odoo_devops_bridge_server_list" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.server.list</field>
+        <field name="model">odoo_devops_bridge.server</field>
+        <field name="arch" type="xml">
+            <list string="DevOps Servers" decoration-success="state == 'connected'"
+                  decoration-danger="state == 'error'" decoration-muted="state == 'draft'">
+                <field name="name"/>
+                <field name="provider" widget="badge"/>
+                <field name="server_type"/>
+                <field name="base_url"/>
+                <field name="sync_direction"/>
+                <field name="default_bot_account_id"/>
+                <field name="state" widget="badge" decoration-success="state == 'connected'"
+                       decoration-danger="state == 'error'" decoration-info="state == 'draft'"/>
+                <field name="last_test_date"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Server Form View -->
+    <record id="view_odoo_devops_bridge_server_form" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.server.form</field>
+        <field name="model">odoo_devops_bridge.server</field>
+        <field name="arch" type="xml">
+            <form string="DevOps Server Instance">
+                <header>
+                    <button name="action_test_connection" type="object" string="Test Connection"
+                            class="btn-primary" icon="fa-plug"/>
+                    <button name="action_fetch_remote_repositories" type="object"
+                            string="Discover Repositories" class="btn-secondary" icon="fa-download"
+                            invisible="state != 'connected'"/>
+                    <button name="action_generate_webhook_secret" type="object"
+                            string="Regenerate Webhook Secret" class="btn-secondary"
+                            icon="fa-refresh"
+                            confirm="Are you sure you want to regenerate the webhook secret and endpoint identifier?"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,connected,error"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_repositories" type="object" class="oe_stat_button"
+                                icon="fa-code-fork">
+                            <field name="repository_count" widget="statinfo" string="Repositories"/>
+                        </button>
+                        <button name="action_view_pull_requests" type="object"
+                                class="oe_stat_button" icon="fa-tasks">
+                            <field name="pull_request_count" widget="statinfo"
+                                   string="Pull Requests"/>
+                        </button>
+                        <button name="action_view_sync_logs" type="object" class="oe_stat_button"
+                                icon="fa-history">
+                            <field name="sync_log_count" widget="statinfo" string="Sync Logs"/>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Connected" bg_color="text-bg-success"
+                            invisible="state != 'connected'"/>
+                    <widget name="web_ribbon" title="Error" bg_color="text-bg-danger"
+                            invisible="state != 'error'"/>
+
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"
+                                   placeholder="e.g. GitHub Production / GitLab Cloud / Self-Hosted YouTrack"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group name="provider_details" string="Platform Details">
+                            <field name="provider" widget="radio" options="{'horizontal': true}"/>
+                            <field name="server_type" widget="radio"
+                                   options="{'horizontal': true}"/>
+                            <field name="base_url"
+                                   placeholder="https://api.github.com or https://git.internal.corp"/>
+                            <field name="sync_direction"/>
+                        </group>
+                        <group name="bot_automation" string="Automation &amp; Bot Defaults">
+                            <field name="default_bot_account_id" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="last_test_date"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-danger" role="alert" invisible="not error_message">
+                        <strong>Connection Error:</strong>
+                        <field name="error_message" readonly="1"/>
+                    </div>
+
+                    <notebook>
+                        <page name="webhook_config" string="Webhook Endpoint &amp; Security">
+                            <group>
+                                <field name="webhook_url" readonly="1" widget="CopyClipboardChar"
+                                       string="Webhook Target URL"/>
+                                <field name="webhook_secret" readonly="1" widget="CopyClipboardChar"
+                                       string="Secret / Token"/>
+                                <field name="webhook_uuid" readonly="1"/>
+                            </group>
+                            <div class="alert alert-info" role="status">
+                                <p>
+                                    <strong>Webhook Setup Instructions:</strong>
+                                </p>
+                                <ul>
+                                    <li>
+                                        <strong>GitHub:</strong>
+                                        Go to Repository/Org Settings &gt; Webhooks &gt; Add
+                                        Webhook. Paste the <em>Webhook Target URL</em> above, set
+                                        Content Type to <code>application/json</code>, and paste the <em>
+                                        Secret Token
+                                    </em> in Secret. Select events: Issues, Issue comments, Pull
+                                        requests, and Milestones.
+                                    </li>
+                                    <li>
+                                        <strong>GitLab:</strong>
+                                        Go to Project/Group Settings &gt; Webhooks. Paste the URL
+                                        above, and paste the <em>Secret Token</em> in the Secret
+                                        Token field. Select: Push events, Issues events, Comments,
+                                        and Merge requests events.
+                                    </li>
+                                    <li>
+                                        <strong>YouTrack:</strong>
+                                        Create an HTTP Webhook or Workflow rule targeting the <em>
+                                        Webhook Target URL
+                                    </em> with the header <code>Authorization: Bearer &lt;Secret
+                                        Token&gt;</code>.
+                                    </li>
+                                </ul>
+                            </div>
+                        </page>
+
+                        <page name="repositories" string="Connected Repositories &amp; Trackers">
+                            <field name="repository_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="external_slug"/>
+                                    <field name="project_id"/>
+                                    <field name="sync_issues" widget="boolean_toggle"/>
+                                    <field name="sync_pull_requests" widget="boolean_toggle"/>
+                                    <field name="sync_comments" widget="boolean_toggle"/>
+                                    <field name="sync_milestones" widget="boolean_toggle"/>
+                                    <field name="last_sync_date"/>
+                                    <button name="action_sync_now" type="object" string="Sync"
+                                            class="btn-sm btn-link" icon="fa-refresh"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page name="accounts" string="User Accounts &amp; Bot Credentials">
+                            <field name="account_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="account_type" widget="badge"/>
+                                    <field name="user_id"/>
+                                    <field name="external_username"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'valid'"
+                                           decoration-danger="state == 'invalid'"/>
+                                    <field name="last_verified_at"/>
+                                    <button name="action_verify" type="object" string="Verify"
+                                            class="btn-sm btn-link" icon="fa-check"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page name="teams" string="Teams &amp; Organizations">
+                            <field name="team_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="external_id"/>
+                                    <field name="slug"/>
+                                    <field name="member_ids" widget="many2many_tags"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Server Search View -->
+    <record id="view_odoo_devops_bridge_server_search" model="ir.ui.view">
+        <field name="name">odoo_devops_bridge.server.search</field>
+        <field name="model">odoo_devops_bridge.server</field>
+        <field name="arch" type="xml">
+            <search string="Search DevOps Servers">
+                <field name="name"/>
+                <field name="provider"/>
+                <field name="server_type"/>
+                <filter string="Connected" name="connected" domain="[('state', '=', 'connected')]"/>
+                <filter string="Connection Errors" name="errors"
+                        domain="[('state', '=', 'error')]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Provider" name="group_by_provider" domain="[]"
+                            context="{'group_by': 'provider'}"/>
+                    <filter string="Deployment Type" name="group_by_type" domain="[]"
+                            context="{'group_by': 'server_type'}"/>
+                    <filter string="Status" name="group_by_state" domain="[]"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_odoo_devops_bridge_server" model="ir.actions.act_window">
+        <field name="name">DevOps Servers</field>
+        <field name="res_model">odoo_devops_bridge.server</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_odoo_devops_bridge_server_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register your first DevOps Server (GitHub, GitLab, or YouTrack)!
+            </p>
+            <p>
+                Configure connections to Cloud / SaaS or On-Premise / Self-Hosted instances.
+            </p>
+        </field>
+    </record>
+</odoo>

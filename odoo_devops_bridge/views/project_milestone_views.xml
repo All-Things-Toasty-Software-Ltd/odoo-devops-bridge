@@ -1,0 +1,21 @@
+<!--
+  ~ Part of Odoo DevOps Bridge. See LICENSE file for full copyright and licensing details.
+  -->
+
+<odoo>
+    <record id="view_project_milestone_form_odoo_devops_bridge" model="ir.ui.view">
+        <field name="name">project.milestone.form.odoo_devops_bridge</field>
+        <field name="model">project.milestone</field>
+        <field name="inherit_id" ref="project.project_milestone_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <group string="DevOps Milestone Sync">
+                    <field name="devops_server_id" options="{'no_create': True}"/>
+                    <field name="devops_repo_id" options="{'no_create': True}"/>
+                    <field name="devops_state"/>
+                    <field name="devops_external_id" readonly="1" groups="base.group_no_one"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
