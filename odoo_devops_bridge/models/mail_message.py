@@ -30,5 +30,5 @@ class MailMessage(models.Model):
             for msg in messages:
                 if msg.model in ('project.task',
                                  'odoo_devops_bridge.pull.request') and msg.message_type == 'comment' and not msg.devops_synced:
-                    OdooDevopsBridgeSyncManager.sync_comment_outbound(msg)
+                    OdooDevOpsBridgeSyncManager.sync_comment_outbound(msg)
         return messages

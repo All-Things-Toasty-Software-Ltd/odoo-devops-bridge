@@ -4,7 +4,7 @@
 
 <odoo>
     <!-- Top-Level App Menu -->
-    <menuitem id="menu_odoo_devops_bridge_bridge_root"
+    <menuitem id="menu_odoo_devops_bridge_root"
               name="DevOps Bridge"
               sequence="65"
               web_icon="odoo_devops_bridge,static/description/icon.png"
