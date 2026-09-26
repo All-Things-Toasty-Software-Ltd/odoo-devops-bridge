@@ -43,7 +43,7 @@ Supported Platforms:
     # always loaded
     'data': [
         'security/odoo_devops_bridge_security.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
         'data/ir_sequence_data.xml',
         'data/ir_cron_data.xml',
         'views/odoo_devops_bridge_server_views.xml',
