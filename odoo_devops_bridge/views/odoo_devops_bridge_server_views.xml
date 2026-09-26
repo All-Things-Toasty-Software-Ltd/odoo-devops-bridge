@@ -102,7 +102,7 @@
                                        string="Webhook Target URL"/>
                                 <field name="webhook_secret" readonly="1" widget="CopyClipboardChar"
                                        string="Secret / Token"/>
-                                <field name="webhook_uuid" readonly="1"/>
+                                <field name="webhook_uuid" readonly="1" widget="CopyClipboardChar" string="Webhook Endpoint Identifier"/>
                             </group>
                             <div class="alert alert-info" role="status">
                                 <p>
