@@ -6,7 +6,7 @@
     'sequence': 200,
     'website': 'https://www.toastysoftware.co.uk',
     'summary': "Bidirectional sync with DevOps providers to mange issues, PRs, Merges, Teams, Comments, and more.",
-    'version': '0.2.0',
+    'version': '0.2.1',
     'depends': ['base', 'web', 'project', 'mail'],
 
     'currency': 'EUR',
