@@ -6,7 +6,7 @@
     'sequence': 200,
     'website': 'https://www.toastysoftware.co.uk',
     'summary': "Bidirectional sync with DevOps providers to mange issues, PRs, Merges, Teams, Comments, and more.",
-    'version': '0.2.0',
+    'version': '0.2.1',
     'depends': ['base', 'web', 'project', 'mail'],
 
     'currency': 'EUR',
@@ -43,7 +43,7 @@ Supported Platforms:
     # always loaded
     'data': [
         'security/odoo_devops_bridge_security.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
         'data/ir_sequence_data.xml',
         'data/ir_cron_data.xml',
         'views/odoo_devops_bridge_server_views.xml',
